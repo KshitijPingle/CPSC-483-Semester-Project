@@ -11,27 +11,22 @@ rows = []
 file1 = "../country_life_expectancy_data_new.csv"
 with open(file1, 'r') as csvfile:
     csvreader = csv.DictReader(csvfile)
-    counter = 0
     current_country = ""
     prev_country = ""
     for row in csvreader:
         # 'row' here is a dictionary
-        if (counter == 0):
-            # Append headers
-            rows.append(row)
-        else:
-            current_country = row["Countries, territories and areas"]
-            if (current_country == prev_country):
-                # Skip
-                continue
-            # Otherwise append current row
-            rows.append(row)
-            # print(f"Added {current_country} to dataset")
-            prev_country = current_country
-        counter += 1
+        current_country = row["Countries, territories and areas"]
+        if (current_country == prev_country):
+            # Skip
+            continue
+        del row["Year"]
+        # Otherwise append current row
+        rows.append(row)
+        # print(f"Added {current_country} to dataset")
+        prev_country = current_country
 
 
-def make_intermediate_file(rows, filename, fieldnames):
+def write_to_intermediate_file(rows, filename, fieldnames):
     with open(filename, 'w') as csvfile:
         csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
         #write headers to file
@@ -40,13 +35,13 @@ def make_intermediate_file(rows, filename, fieldnames):
         csvwriter.writerows(rows)
 
 
-fieldnames = ['Countries, territories and areas', 'Year', 'Life expectancy at birth (years), Both sexes', 'Life expectancy at birth (years), Male',
+fieldnames = ['Countries, territories and areas', 'Life expectancy at birth (years), Both sexes', 'Life expectancy at birth (years), Male',
               'Life expectancy at birth (years), Female', 'Life expectancy at age 60 (years), Both sexes', 'Life expectancy at age 60 (years), Male',
               'Life expectancy at age 60 (years), Female', 'Healthy life expectancy (HALE) at birth (years), Both sexes', 'Healthy life expectancy (HALE) at birth (years), Male',
               'Healthy life expectancy (HALE) at birth (years), Female', 'Healthy life expectancy (HALE) at age 60 (years), Both sexes',
               'Healthy life expectancy (HALE) at age 60 (years), Male', 'Healthy life expectancy (HALE) at age 60 (years), Female']
 file2 = "intermediate_csv_file_1.csv"
-make_intermediate_file(rows, file2, fieldnames)
+write_to_intermediate_file(rows, file2, fieldnames)
 
 
 # Now we have attached 1 file and 2,576 datapoints
@@ -69,16 +64,32 @@ for filename in os.listdir(directory_path):
                     continue
                 current_country = row["Country Name"]
                 column_name = row["Series Name"]
-                print(f"Column name: {column_name}")
+                if (column_name not in fieldnames):
+                    fieldnames.append(column_name)
+                # print(f"Column name: {column_name}")
                 # print(current_country)
                 # Now find if we already have this country in rows
+                country_found = False
                 for row1 in rows:
                     country = row1["Countries, territories and areas"]
                     if (current_country == country):
                         # print(f"Found {current_country}")
+                        country_found = True
 
-                        # if found, add datapoint to current row
-                        row1[column_name] = row["2020 [YR2020]"]
+                        # Check if we have a new column
+                        if (column_name not in row1):
+                            if (filename == "prevalence_of_overweight_adults_males_females.csv"):
+                                # Complete data is from 2016
+                                row1[column_name] = row["2016 [YR2016]"]
+                            elif (filename == "suicide_mortality_rate_total_females_males.csv"):
+                                # Complete data is from 2019
+                                row1[column_name] = row["2019 [YR2019]"]
+                            else:
+                                # Else attach the latest one from 2020
+                                row1[column_name] = row["2020 [YR2020]"]
                         break
                 counter += 1
-    break # For now
+    # break # For now
+
+file3 = "intermediate_csv_file_2.csv"
+write_to_intermediate_file(rows, file3, fieldnames)
