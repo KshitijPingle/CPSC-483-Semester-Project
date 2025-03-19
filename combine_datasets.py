@@ -240,3 +240,40 @@ for filename in os.listdir(directory_path):
 intermediate_file2 = "intermediate_csv_file_5.csv"
 write_to_intermediate_file(rows, intermediate_file2, fieldnames)
 # 18 files added now, approx. 5668 datapoints
+
+
+
+
+file2 = "../concentration_of_fine_particulate_matter_by_country.csv"
+with open(file2, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    for row in csvreader:
+        country_code = row["SpatialDimValueCode"]
+        indicator = row["Indicator"]
+        residence_area_type = row["Dim1"]
+        column_1 = f"{indicator} in {residence_area_type} Fact Value"
+        column_2 = f"{indicator} in {residence_area_type} Fact Value Low"
+        column_3 = f"{indicator} in {residence_area_type} Fact Value High"
+
+        if (column_1 not in fieldnames):
+            fieldnames.append(column_1)
+        if (column_2 not in fieldnames):
+            fieldnames.append(column_2)
+        if (column_3 not in fieldnames):
+            fieldnames.append(column_3)
+
+        for row2 in rows:
+            current_code = row2["Country Code"]
+            if (current_code == country_code):
+                # print(f"{current_country} == {country}")
+                row2[column_1] = row["FactValueNumeric"]
+                row2[column_2] = row["FactValueNumericLow"]
+                row2[column_3] = row["FactValueNumericHigh"]
+
+
+intermediate_file3 = "intermediate_csv_file_6.csv"
+write_to_intermediate_file(rows, intermediate_file3, fieldnames)
+# 19 files added now, approx 8578 datapoints
+
+
