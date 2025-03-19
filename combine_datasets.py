@@ -171,7 +171,7 @@ country_count = 0
 with open(file1, 'r') as csvfile:
     csvreader = csv.DictReader(csvfile)
     for row in csvreader:
-        if (country_count >= 265):
+        if (country_count >= 217):
             break
 
         new_row = {}
@@ -204,4 +204,39 @@ with open(file1, 'r') as csvfile:
 
 intermediate_file = "intermediate_csv_file_4.csv"
 write_to_intermediate_file(rows, intermediate_file, fieldnames)
-# 1 file completely attached, approx. 795 datapoints added
+# 1 file completely attached, approx. 1090 datapoints added
+
+# Now add everything from data folder
+directory_path = "../data"
+for filename in os.listdir(directory_path):
+    file_path = os.path.join(directory_path, filename)
+    # print(file_path)
+    if os.path.isfile(file_path):
+        # Process this file
+        with open(file_path, 'r') as csvfile:
+            csvreader = csv.DictReader(csvfile)
+
+            for row in csvreader:
+                country_code = row["Country Code"]
+                column_name = row["Series Name"]
+                if (column_name not in fieldnames):
+                    fieldnames.append(column_name)
+                
+                # Now check if we have this country in rows
+                for row1 in rows:
+                    current_code = row1["Country Code"]
+                    if (country_code == current_code):
+                        if (filename == "prevalence_of_overweight_adults_males_females.csv"):
+                            # Complete data is from 2016
+                            row1[column_name] = row["2016 [YR2016]"]
+                        elif (filename == "suicide_mortality_rate_total_females_males.csv"):
+                            # Complete data is from 2019
+                            row1[column_name] = row["2019 [YR2019]"]
+                        else:
+                            # Else attach the latest one from 2020
+                            row1[column_name] = row["2020 [YR2020]"]
+                        break
+
+intermediate_file2 = "intermediate_csv_file_5.csv"
+write_to_intermediate_file(rows, intermediate_file2, fieldnames)
+# 18 files added now, approx. 5668 datapoints
