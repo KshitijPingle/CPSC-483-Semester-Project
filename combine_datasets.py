@@ -277,3 +277,46 @@ write_to_intermediate_file(rows, intermediate_file3, fieldnames)
 # 19 files added now, approx 8578 datapoints
 
 
+
+
+file3 = "../country_life_expectancy_data_new.csv"
+with open(file3, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    current_country = ""
+    prev_country = ""
+
+    for row in csvreader:
+        current_country = row["Countries, territories and areas"]
+        if (current_country == [prev_country]):
+            continue
+        
+        # Now find that country in rows and add
+        for row2 in rows:
+            country = row2["Country Name"]
+            if (current_country == country):
+                row2["Life expectancy at birth (years), Both sexes"] = row["Life expectancy at birth (years), Both sexes"]
+                row2["Life expectancy at birth (years), Male"] = row["Life expectancy at birth (years), Male"]
+                row2["Life expectancy at birth (years), Female"] = row["Life expectancy at birth (years), Female"]
+                row2["Life expectancy at age 60 (years), Both sexes"] = row["Life expectancy at age 60 (years), Both sexes"]
+                row2["Life expectancy at age 60 (years), Male"] = row["Life expectancy at age 60 (years), Male"]
+                row2["Life expectancy at age 60 (years), Female"] = row["Life expectancy at age 60 (years), Female"]
+                row2["Healthy life expectancy (HALE) at birth (years), Both sexes"] = row["Healthy life expectancy (HALE) at birth (years), Both sexes"]
+                row2["Healthy life expectancy (HALE) at birth (years), Male"] = row["Healthy life expectancy (HALE) at birth (years), Male"]
+                row2["Healthy life expectancy (HALE) at birth (years), Female"] = row["Healthy life expectancy (HALE) at birth (years), Female"]
+                row2["Healthy life expectancy (HALE) at age 60 (years), Both sexes"] = row["Healthy life expectancy (HALE) at age 60 (years), Both sexes"]
+                row2["Healthy life expectancy (HALE) at age 60 (years), Male"] = row["Healthy life expectancy (HALE) at age 60 (years), Male"]
+                row2["Healthy life expectancy (HALE) at age 60 (years), Female"] = row["Healthy life expectancy (HALE) at age 60 (years), Female"]
+
+        prev_country = current_country
+
+fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy at birth (years), Male",
+               "Life expectancy at birth (years), Female", "Life expectancy at age 60 (years), Both sexes",
+               "Life expectancy at age 60 (years), Male", "Life expectancy at age 60 (years), Female", 
+               "Healthy life expectancy (HALE) at birth (years), Both sexes", "Healthy life expectancy (HALE) at birth (years), Male", 
+               "Healthy life expectancy (HALE) at birth (years), Female", "Healthy life expectancy (HALE) at age 60 (years), Both sexes", 
+               "Healthy life expectancy (HALE) at age 60 (years), Male", "Healthy life expectancy (HALE) at age 60 (years), Female"]
+
+intermediate_file4 = "intermediate_csv_file_7.csv"
+write_to_intermediate_file(rows, intermediate_file4, fieldnames)
+# 20 files added, approx. 10906 datapoints right now
