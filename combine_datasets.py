@@ -7,7 +7,7 @@ final_dataset  = "../final_dataset.xlsx"
 rows = []
 fieldnames = []
 
-def write_to_intermediate_file(rows, filename, fieldnames):
+def write_to_file(rows, filename, fieldnames):
     with open(filename, 'w') as csvfile:
         csvwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
         #write headers to file
@@ -57,7 +57,7 @@ with open(file1, 'r') as csvfile:
         country_count += 1
 
 intermediate_file = "intermediate_csv_file_1.csv"
-write_to_intermediate_file(rows, intermediate_file, fieldnames)
+write_to_file(rows, intermediate_file, fieldnames)
 # 1 file completely attached, approx. 1090 datapoints added
 
 
@@ -94,7 +94,7 @@ for filename in os.listdir(directory_path):
                         break
 
 intermediate_file2 = "intermediate_csv_file_2.csv"
-write_to_intermediate_file(rows, intermediate_file2, fieldnames)
+write_to_file(rows, intermediate_file2, fieldnames)
 # 18 files added now, approx. 5668 datapoints
 
 
@@ -130,14 +130,35 @@ with open(file2, 'r') as csvfile:
 
 
 intermediate_file3 = "intermediate_csv_file_3.csv"
-write_to_intermediate_file(rows, intermediate_file3, fieldnames)
+write_to_file(rows, intermediate_file3, fieldnames)
 # 19 files added now, approx 8578 datapoints
 
 
 
-
-file3 = "../country_life_expectancy_data_new.csv"
+file3 = "../gdp_of_countries.csv"
 with open(file3, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    current_country = ""
+    column_name = "GDP, current prices (Billions of U.S. dollars)"
+    fieldnames += [column_name]
+
+    for row in csvreader:
+        current_country = row[column_name]
+        for row2 in rows:
+            country = row2["Country Name"]
+            if (current_country == country):
+                row2[column_name] = row["2023"]
+
+intermediate_file4 = "intermediate_csv_file_4.csv"
+write_to_file(rows, intermediate_file4, fieldnames)
+# 20 files added, approx. 9,100 data points
+
+
+
+# Add life expectancy data
+file4 = "../country_life_expectancy_data_new.csv"
+with open(file4, 'r') as csvfile:
     csvreader = csv.DictReader(csvfile)
 
     current_country = ""
@@ -174,6 +195,8 @@ fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy 
                "Healthy life expectancy (HALE) at birth (years), Female", "Healthy life expectancy (HALE) at age 60 (years), Both sexes", 
                "Healthy life expectancy (HALE) at age 60 (years), Male", "Healthy life expectancy (HALE) at age 60 (years), Female"]
 
-intermediate_file4 = "intermediate_csv_file_4.csv"
-write_to_intermediate_file(rows, intermediate_file4, fieldnames)
-# 20 files added, approx. 10906 datapoints right now
+intermediate_file5 = "intermediate_csv_file_5.csv"
+write_to_file(rows, intermediate_file5, fieldnames)
+# 21 files added, approx. 11,500 datapoints right now
+
+
