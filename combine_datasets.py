@@ -175,6 +175,7 @@ with open(file4, 'r') as csvfile:
                 row2[column_1] = row["Ladder score"]
                 row2[column_2] = row["upperwhisker"]
                 row2[column_3] = row["lowerwhisker"]
+                break
 
 
 
@@ -216,7 +217,26 @@ with open(file5, 'r') as csvfile:
 
 
 
+file6 = "../pop_density.csv"
+with open(file6, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
 
+    current_code = ""
+    column_name = "Population density (people per sq. km of land area)"
+    fieldnames += [column_name]
+
+    for row in csvreader:
+        current_code = row["Country Code"]
+        value = row["2022"]
+        if (value == ""):
+            value = row["2021"]
+        
+        # Add the value to rows
+        for row2 in rows:
+            country_code = row2["Country Code"]
+            if (current_code == country_code):
+                row2[column_name] = value
+                break
 
 
 # Add life expectancy data (The Target Labels)
@@ -260,6 +280,9 @@ fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy 
 
 intermediate_file5 = "intermediate_csv_file_5.csv"
 write_to_file(rows, intermediate_file5, fieldnames)
-# 23 files added, approx. 12,500 datapoints right now
+# 24 files added, approx. 12,700 datapoints right now
+
+
+
 
 
