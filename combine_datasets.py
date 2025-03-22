@@ -155,10 +155,6 @@ with open(file3, 'r') as csvfile:
 # 20 files added, approx. 9,100 data points
 
 
-
-
-
-
 file4 = "../happiness_data_with_country.csv"
 with open(file4, 'r') as csvfile:
     csvreader = csv.DictReader(csvfile)
@@ -182,10 +178,50 @@ with open(file4, 'r') as csvfile:
 
 
 
-
-# Add life expectancy data
-file5 = "../country_life_expectancy_data_new.csv"
+file5 = "../share-of-population-that-cannot-afford-a-healthy-diet.csv"
 with open(file5, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+    prev_country = ""
+    current_country = ""
+    column_name = "Share of the population who cannot afford a healthy diet"
+    fieldnames += [column_name]
+    value = 0
+    latest_year = 0
+
+    for row in csvreader:
+        current_country = row["Entity"]
+        if (prev_country == current_country):
+            year = row["Year"]
+            if (year > latest_year):
+                latest_year = year
+                value = row[column_name]
+        else:
+            # Find the country in rows and add the value
+            for row2 in rows:
+                country = row2["Country Name"]
+                if (prev_country == country):
+                    row2[column_name] = value
+                    break
+            latest_year = row["Year"]
+            value = row[column_name]
+        prev_country = current_country
+    
+    # Find the country in rows and add the value
+    for row2 in rows:
+        country = row2["Country Name"]
+        if (current_country == country):
+            row2[column_name] = value
+            break
+# 22 files added
+
+
+
+
+
+
+# Add life expectancy data (The Target Labels)
+file7 = "../country_life_expectancy_data_new.csv"
+with open(file7, 'r') as csvfile:
     csvreader = csv.DictReader(csvfile)
 
     current_country = ""
@@ -224,6 +260,6 @@ fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy 
 
 intermediate_file5 = "intermediate_csv_file_5.csv"
 write_to_file(rows, intermediate_file5, fieldnames)
-# 22 files added, approx. 12,400 datapoints right now
+# 23 files added, approx. 12,500 datapoints right now
 
 
