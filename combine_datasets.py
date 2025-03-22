@@ -315,7 +315,6 @@ with open(file9, 'r') as csvfile:
     fieldnames += [column_name]
 
     for row in csvreader:
-        # print(row)
         current_country = row["\ufeffname"]
 
         for row2 in rows:
@@ -325,6 +324,24 @@ with open(file9, 'r') as csvfile:
                 break
 #26 files added
 
+
+file10 = "../electricity_installed_generating_capacity.csv"
+with open(file10, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    current_country = ""
+    column_name = "Installed Electricity Generating Capacity (kW)"
+    fieldnames += [column_name]
+
+    for row in csvreader:
+        current_country = row["\ufeffname"]
+
+        for row2 in rows:
+            country = row2["Country Name"]
+            if (current_country == country):
+                row2[column_name] = row["kW"]
+                break
+# 27 files added
 
 # Add life expectancy data (The Target Labels)
 target_file = "../country_life_expectancy_data_new.csv"
@@ -367,7 +384,7 @@ fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy 
 
 intermediate_file5 = "intermediate_csv_file_5.csv"
 write_to_file(rows, intermediate_file5, fieldnames)
-# 27 files added, approx. 13,200 datapoints right now
+# 28 files added, approx. 13,400 datapoints right now
 
 
 
