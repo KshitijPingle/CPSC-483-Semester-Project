@@ -237,11 +237,55 @@ with open(file6, 'r') as csvfile:
             if (current_code == country_code):
                 row2[column_name] = value
                 break
+# 23 files added
+
+
+file7 = "../homicide-rate-unodc.csv"
+with open(file7, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    prev_code = ""
+    current_code = ""
+    value = ""
+    prev_value = ""
+    year = 0
+    latest_year = 0
+    column_name = "Homicide rate per 100,000 population - sex: Total - age: Total"
+    fieldnames += [column_name]
+
+    for row in csvreader:
+        current_code = row["Code"]
+        year = row["Year"]
+        if (prev_code == ""):
+            # first iteration
+            value = row[column_name]
+            latest_year = year
+        elif (prev_code == current_code):
+            if (year > latest_year):
+                latest_year = year
+                value = row[column_name]
+        else:
+            # New country
+            value = row[column_name]
+            latest_year = year
+        if (((value == 0) or (value == "0")) and (prev_code == current_code)):
+            value = prev_value
+        # Add value to current country
+        for row2 in rows:
+            code = row2["Country Code"]
+            if (current_code == code):
+                row2[column_name] = value
+                break
+
+        prev_code = current_code
+        prev_value = value
+# 24 files added
+
 
 
 # Add life expectancy data (The Target Labels)
-file7 = "../country_life_expectancy_data_new.csv"
-with open(file7, 'r') as csvfile:
+target_file = "../country_life_expectancy_data_new.csv"
+with open(target_file, 'r') as csvfile:
     csvreader = csv.DictReader(csvfile)
 
     current_country = ""
@@ -280,7 +324,7 @@ fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy 
 
 intermediate_file5 = "intermediate_csv_file_5.csv"
 write_to_file(rows, intermediate_file5, fieldnames)
-# 24 files added, approx. 12,700 datapoints right now
+# 25 files added, approx. 12,900 datapoints right now
 
 
 
