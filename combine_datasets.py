@@ -343,6 +343,25 @@ with open(file10, 'r') as csvfile:
                 break
 # 27 files added
 
+file11 = "../renewable_energy_consumption.csv"
+with open(file11, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    current_code = ""
+    column_name = "Renewable energy consumption (% of total final energy consumption)"
+    fieldnames += [column_name]
+
+    for row in csvreader:
+        current_code = row["Country Code"]
+
+        for row2 in rows:
+            code = row2["Country Code"]
+            if (current_code == code):
+                row2[column_name] = row["2020"]
+                break
+# 28 files added
+
+
 # Add life expectancy data (The Target Labels)
 target_file = "../country_life_expectancy_data_new.csv"
 with open(target_file, 'r') as csvfile:
@@ -384,7 +403,7 @@ fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy 
 
 intermediate_file5 = "intermediate_csv_file_5.csv"
 write_to_file(rows, intermediate_file5, fieldnames)
-# 28 files added, approx. 13,400 datapoints right now
+# 29 files added, approx. 13,600 datapoints right now
 
 
 
