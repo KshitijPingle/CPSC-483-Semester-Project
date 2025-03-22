@@ -282,6 +282,29 @@ with open(file7, 'r') as csvfile:
 # 24 files added
 
 
+file8 = "../universal_health_coverage.csv"
+with open(file8, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    current_country = ""
+    column_name = "Universal Health Coverage (UHC) service coverage index"
+    fieldnames += [column_name]
+
+    for row in csvreader:
+        current_country = row["GEO_NAME_SHORT"]
+
+        if (row["DIM_GEO_CODE_TYPE"] != "COUNTRY"):
+            # Skip
+            continue
+
+        # Find this country in rows
+        for row2 in rows:
+            country = row2["Country Name"]
+            if (current_country == country):
+                row2[column_name] = row["INDEX_N"]
+                break
+# 25 files added
+
 
 # Add life expectancy data (The Target Labels)
 target_file = "../country_life_expectancy_data_new.csv"
@@ -324,7 +347,7 @@ fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy 
 
 intermediate_file5 = "intermediate_csv_file_5.csv"
 write_to_file(rows, intermediate_file5, fieldnames)
-# 25 files added, approx. 12,900 datapoints right now
+# 26 files added, approx. 13,050 datapoints right now
 
 
 
