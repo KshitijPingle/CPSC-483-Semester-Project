@@ -306,6 +306,26 @@ with open(file8, 'r') as csvfile:
 # 25 files added
 
 
+file9 = "../infant_mortality_rate.csv"
+with open(file9, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    current_country = ""
+    column_name = "infant deaths / 1,000 births"
+    fieldnames += [column_name]
+
+    for row in csvreader:
+        # print(row)
+        current_country = row["\ufeffname"]
+
+        for row2 in rows:
+            country = row2["Country Name"]
+            if (current_country == country):
+                row2[column_name] = row[" deaths/1000 live births"]
+                break
+#26 files added
+
+
 # Add life expectancy data (The Target Labels)
 target_file = "../country_life_expectancy_data_new.csv"
 with open(target_file, 'r') as csvfile:
@@ -347,7 +367,7 @@ fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy 
 
 intermediate_file5 = "intermediate_csv_file_5.csv"
 write_to_file(rows, intermediate_file5, fieldnames)
-# 26 files added, approx. 13,050 datapoints right now
+# 27 files added, approx. 13,200 datapoints right now
 
 
 
