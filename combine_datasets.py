@@ -56,8 +56,8 @@ with open(file1, 'r') as csvfile:
         rows.append(new_row)
         country_count += 1
 
-intermediate_file = "intermediate_csv_file_1.csv"
-write_to_file(rows, intermediate_file, fieldnames)
+# intermediate_file = "intermediate_csv_file_1.csv"
+# write_to_file(rows, intermediate_file, fieldnames)
 # 1 file completely attached, approx. 1090 datapoints added
 
 
@@ -93,8 +93,8 @@ for filename in os.listdir(directory_path):
                             row1[column_name] = row["2020 [YR2020]"]
                         break
 
-intermediate_file2 = "intermediate_csv_file_2.csv"
-write_to_file(rows, intermediate_file2, fieldnames)
+# intermediate_file2 = "intermediate_csv_file_2.csv"
+# write_to_file(rows, intermediate_file2, fieldnames)
 # 18 files added now, approx. 5668 datapoints
 
 
@@ -129,8 +129,8 @@ with open(file2, 'r') as csvfile:
                 break
 
 
-intermediate_file3 = "intermediate_csv_file_3.csv"
-write_to_file(rows, intermediate_file3, fieldnames)
+# intermediate_file3 = "intermediate_csv_file_3.csv"
+# write_to_file(rows, intermediate_file3, fieldnames)
 # 19 files added now, approx 8578 datapoints
 
 
@@ -150,15 +150,42 @@ with open(file3, 'r') as csvfile:
             if (current_country == country):
                 row2[column_name] = row["2023"]
 
-intermediate_file4 = "intermediate_csv_file_4.csv"
-write_to_file(rows, intermediate_file4, fieldnames)
+# intermediate_file4 = "intermediate_csv_file_4.csv"
+# write_to_file(rows, intermediate_file4, fieldnames)
 # 20 files added, approx. 9,100 data points
 
 
 
-# Add life expectancy data
-file4 = "../country_life_expectancy_data_new.csv"
+
+
+
+file4 = "../happiness_data_with_country.csv"
 with open(file4, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    current_country = ""
+    country = ""
+    column_1 = "Happiness Ladder Score"
+    column_2 = "Happiness Ladder Score Upper Whisker"
+    column_3 = "Happiness Ladder Score Lower Whisker"
+    fieldnames += [column_1, column_2, column_3]
+
+    for row in csvreader:
+        current_country = row["Country name"]
+
+        for row2 in rows:
+            country = row2["Country Name"]
+            if (current_country == country):
+                row2[column_1] = row["Ladder score"]
+                row2[column_2] = row["upperwhisker"]
+                row2[column_3] = row["lowerwhisker"]
+
+
+
+
+# Add life expectancy data
+file5 = "../country_life_expectancy_data_new.csv"
+with open(file5, 'r') as csvfile:
     csvreader = csv.DictReader(csvfile)
 
     current_country = ""
@@ -197,6 +224,6 @@ fieldnames += ["Life expectancy at birth (years), Both sexes", "Life expectancy 
 
 intermediate_file5 = "intermediate_csv_file_5.csv"
 write_to_file(rows, intermediate_file5, fieldnames)
-# 21 files added, approx. 11,500 datapoints right now
+# 22 files added, approx. 12,400 datapoints right now
 
 
