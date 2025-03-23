@@ -381,6 +381,64 @@ with open(file12, 'r') as csvfile:
                 break
 # 29 files added
 
+new_fieldnames = []
+
+file13 = "../undesa_pd_2019_wmd_marital_status.csv"
+with open(file13, 'r') as csvfile:
+    csvreader = csv.DictReader(csvfile)
+
+    current_country = ""
+    column_name = ""
+
+    for row in csvreader:
+        current_country = row["Country or area"]
+        column_name = row["MaritalStatus"] + " " + row["Sex"] + " in age group" + row["AgeGroup"] + " (in %)"
+        value = row["DataValue"]
+
+        if ((row["MaritalStatus"] == "Divorced or Separated") or (row["MaritalStatus"] == "Married spouse present") or
+            (row["MaritalStatus"] == "Widowed or separated") or (row["MaritalStatus"] == "Single or in consensual unions") or 
+            (row["MaritalStatus"] == "Married or in consensual union") or (row["MaritalStatus"] == "Divorced or Separated or Widowed") or 
+            (row["MaritalStatus"] == "Divorced or Widowed") or (row["MaritalStatus"] == "Ever married") or 
+            (row["MaritalStatus"] == "Married polygamous") or (row["MaritalStatus"] == "Married monogamous") or 
+            (row["MaritalStatus"] == "Not in union") or (row["MaritalStatus"] == "Not living together") or
+            (row["MaritalStatus"] == "Married or Living together") or (row["MaritalStatus"] == "Widowed or divorced") or 
+            (row["MaritalStatus"] == "Consensual union") or (row["MaritalStatus"] == "Currently not married") or 
+            (row["MaritalStatus"] == "Consensual union, not living together") or (row["MaritalStatus"] == "Married or married but separated") or
+            (row["MaritalStatus"] == "Registred partnership") or (row["MaritalStatus"] == "Visiting partner") or
+            (row["MaritalStatus"] == "Widowed, divorced or separated") or (row["MaritalStatus"] == "Living together") or
+            (row["MaritalStatus"] == "Married, in consensual unions or separated") or (row["MaritalStatus"] == "Currently not married nor in consensual union") or
+            (row["MaritalStatus"] == "Marriage contract") or (row["MaritalStatus"] == "Separated from consensual union") or
+            (row["MaritalStatus"] == "Separated from marriage") or (row["MaritalStatus"] == "Married gaunna not performed") or
+            (row["MaritalStatus"] == "Married spouse absent")):
+            # Skip
+            continue
+        if ((row["AgeGroup"] != "[15-19]") and (row["AgeGroup"] != "[20-24]") and (row["AgeGroup"] != "[25-29]") and
+            (row["AgeGroup"] != "[30-34]") and (row["AgeGroup"] != "[35-39]") and (row["AgeGroup"] != "[40-44]") and
+            (row["AgeGroup"] != "[45-49]]") and (row["AgeGroup"] != "[50-54]") and (row["AgeGroup"] != "[55-59]") and
+            (row["AgeGroup"] != "[60-64]") and (row["AgeGroup"] != "[65-69]") and (row["AgeGroup"] != "[70-74]") and
+            (row["AgeGroup"] != "[75+]")):
+            # Skip
+            continue
+
+        if ((column_name == "Never married Men in age group[65+] (in %)") or (column_name == "Separated Men in age group[65+] (in %)") or
+            (column_name == "Separated Women in age group[65+] (in %)")):
+            # Skip
+            continue
+
+        if (column_name not in fieldnames):
+            fieldnames += [column_name]
+            new_fieldnames += [column_name]
+
+        # Add this value to rows
+        for row2 in rows:
+            country = row2["Country Name"]
+            if (current_country == country):
+                row2[column_name] = value
+                break
+
+# new_fieldnames.sort()
+# print(new_fieldnames)
+
 
 
 # Add life expectancy data (The Target Labels)
